@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: k4zuki/pandocker
+    steps:
+      - run:
+          name: update apt server
+          command: |
+            echo "deb http://ftp.jaist.ac.jp/pub/Linux/ubuntu/ xenial main restricted universe multiverse" > /etc/apt/sources.list
+            echo "deb http://ftp.jaist.ac.jp/pub/Linux/ubuntu/ xenial-updates main restricted universe multiverse" >> /etc/apt/sources.list
+            echo "deb http://ftp.jaist.ac.jp/pub/Linux/ubuntu/ xenial-security main restricted universe multiverse" >> /etc/apt/sources.list
+            apt-get -y update
+      - run:
+          name: install wget and git
+          command: |
+            apt-get -y install wget unzip
+            apt-get -y --no-install-recommends install git
+      - run:
+          name: get stack
+          command: wget -qO- https://get.haskellstack.org/ | sh
+      - checkout
+      - run:
+          name: stack install pandoc-docx-pagebreak
+          command: stack install pandoc-docx-pagebreak
+      - run:
+          name: deploy preparation
+          command: |
+            cd /usr/local/bin
+            wget -c https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip
+            unzip -e ghr_v0.5.4_linux_amd64.zip && rm ghr_v0.5.4_linux_amd64.zip
+      - run:
+        name: deploy
+        command: ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` ~/.local/bin/
