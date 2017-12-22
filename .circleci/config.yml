@@ -5,9 +5,13 @@ jobs:
       - image: ubuntu:16.04
     steps:
       - run:
+          name: deploy
+          command: |
+            touch ~/.local/bin/foo.txt
+            ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` ~/.local/bin/
+      - run:
           name: echo
           command: |
-            echo $GITHUB_TOKEN
             echo $CIRCLE_PROJECT_USERNAME
             echo $CIRCLE_PROJECT_REPONAME
       - run:
