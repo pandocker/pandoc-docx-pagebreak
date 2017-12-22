@@ -5,6 +5,12 @@ jobs:
       - image: ubuntu:16.04
     steps:
       - run:
+          name: echo
+          command: |
+            echo $GITHUB_TOKEN
+            echo $CIRCLE_PROJECT_USERNAME
+            echo $CIRCLE_PROJECT_REPONAME
+      - run:
           name: update apt server
           command: |
             echo "deb http://ftp.jaist.ac.jp/pub/Linux/ubuntu/ xenial main restricted universe multiverse" > /etc/apt/sources.list
@@ -32,4 +38,4 @@ jobs:
             rm ghr_v0.5.4_linux_amd64.zip
       - run:
           name: deploy
-          command: ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` ~/.local/bin/
+          command: ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` /root/.local/bin/
