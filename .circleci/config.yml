@@ -7,6 +7,7 @@ jobs:
       - run:
           name: deploy
           command: |
+            mkdir -p ~/.local/bin/
             touch ~/.local/bin/foo.txt
             ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` ~/.local/bin/
       - run:
