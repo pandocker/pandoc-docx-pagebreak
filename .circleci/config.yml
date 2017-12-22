@@ -28,7 +28,8 @@ jobs:
           command: |
             cd /usr/local/bin
             wget -c https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip
-            unzip -e ghr_v0.5.4_linux_amd64.zip && rm ghr_v0.5.4_linux_amd64.zip
+            unzip -e ghr_v0.5.4_linux_amd64.zip
+            rm ghr_v0.5.4_linux_amd64.zip
       - run:
           name: deploy
           command: ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` ~/.local/bin/
