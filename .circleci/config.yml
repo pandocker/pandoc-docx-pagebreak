@@ -6,11 +6,6 @@ jobs:
     steps:
 
       - run:
-          name: echo
-          command: |
-            echo $CIRCLE_PROJECT_USERNAME
-            echo $CIRCLE_PROJECT_REPONAME
-      - run:
           name: update apt server
           command: |
             echo "deb http://ftp.jaist.ac.jp/pub/Linux/ubuntu/ xenial main restricted universe multiverse" > /etc/apt/sources.list
@@ -36,6 +31,8 @@ jobs:
           command: |
             mkdir -p ~/.local/bin/
             touch ~/.local/bin/foo.txt
+            echo $CIRCLE_PROJECT_USERNAME >> ~/.local/bin/foo.txt
+            echo $CIRCLE_PROJECT_REPONAME >> ~/.local/bin/foo.txt
             ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` ~/.local/bin/
 
       # - run:
