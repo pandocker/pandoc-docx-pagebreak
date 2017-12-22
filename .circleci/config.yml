@@ -14,40 +14,21 @@ jobs:
             apt-get -y update
       - run:
           name: install wget and git
-          command: |
-            apt-get -y install wget unzip
-            apt-get -y install git
+          command: apt-get -y install wget unzip git
       - checkout
-
       - run:
-          name: deploy preparation test
+          name: get stack
+          command: wget -qO- https://get.haskellstack.org/ | sh
+      - run:
+          name: stack install pandoc-docx-pagebreak
+          command: stack install pandoc-docx-pagebreak
+      - run:
+          name: deploy preparation
           command: |
             cd /usr/local/bin
             wget -c https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip
             unzip -e ghr_v0.5.4_linux_amd64.zip
             rm ghr_v0.5.4_linux_amd64.zip
       - run:
-          name: deploy test
-          command: |
-            mkdir -p ~/.local/bin/
-            touch ~/.local/bin/foo.txt
-            echo $CIRCLE_PROJECT_USERNAME >> ~/.local/bin/foo.txt
-            echo $CIRCLE_PROJECT_REPONAME >> ~/.local/bin/foo.txt
-            ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` ~/.local/bin/
-
-      # - run:
-      #     name: get stack
-      #     command: wget -qO- https://get.haskellstack.org/ | sh
-      # - run:
-      #     name: stack install pandoc-docx-pagebreak
-      #     command: stack install pandoc-docx-pagebreak
-      # - run:
-      #     name: deploy preparation
-      #     command: |
-      #       cd /usr/local/bin
-      #       wget -c https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip
-      #       unzip -e ghr_v0.5.4_linux_amd64.zip
-      #       rm ghr_v0.5.4_linux_amd64.zip
-      # - run:
-      #     name: deploy
-      #     command: ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` /root/.local/bin/
+          name: deploy
+          command: ghr -replace -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME build-`git rev-parse --short HEAD` /root/.local/bin/
