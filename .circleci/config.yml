@@ -15,7 +15,7 @@ jobs:
           name: install wget and git
           command: |
             apt-get -y install wget unzip
-            apt-get -y --no-install-recommends install git
+            apt-get -y install git
       - run:
           name: get stack
           command: wget -qO- https://get.haskellstack.org/ | sh
